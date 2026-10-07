@@ -4,6 +4,17 @@
 if exists('g:loaded_pytest_tools')
   finish
 endif
+" Required plugins: without them nothing here is defined
+let s:missing = filter({
+      \ 'tpope/vim-dispatch': 'autoload/dispatch.vim',
+      \ }, 'empty(globpath(&rtp, v:val))')
+if !empty(s:missing)
+  echohl WarningMsg
+  echomsg 'pytest.vim: not loaded, requires ' . join(sort(keys(s:missing)), ', ')
+  echohl None
+  finish
+endif
+unlet s:missing
 let g:loaded_pytest_tools = 1
 
 " Reduce pytest output (or coverage test contexts) in the current buffer to

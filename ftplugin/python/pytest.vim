@@ -1,3 +1,8 @@
+" Nothing when plugin/pytest.vim didn't load (vim-dispatch missing)
+if !exists('g:loaded_pytest_tools')
+  finish
+endif
+
 " vim dispatch
 compiler pytest
 " https://github.com/tpope/vim-dispatch/issues/315
