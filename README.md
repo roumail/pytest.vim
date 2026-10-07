@@ -19,27 +19,44 @@ test, grouped into blocks per file (`:ParsePytestFailures!`: per test class).
 `Tapi_PdbDiff` is a terminal-API hook (`:h terminal-api`) that a pdb `vdiff`
 command can call to show expected | actual in a diff tab.
 
-No keys are bound. These `<Plug>` mappings are provided for your vimrc, where
-`{scope}` is `method`, `class`, `function` or `file`:
+## Keys
 
-| Mapping | Action |
-| --- | --- |
-| `<Plug>(pytest-run-{scope})` | Run the test around the cursor |
-| `<Plug>(pytest-trace-{scope})` | Same with `--trace` |
-| `<Plug>(pytest-pdb-{scope})` | Same with `--pdb` |
-| `<Plug>(pytest-yank-{scope})` | Yank the node id |
+Test files are the Python files whose name matches `g:pytest_file_patterns`
+(pytest's own default: `test_*.py` and `*_test.py`); `pytest#is_test_file()`
+tells whether the current buffer is one.
 
-For example, in `~/.vim/ftplugin/python/keymaps.vim`, for test files only:
+Nothing is bound until you set `g:pytest_mappings`. Then every test file gets
+buffer-local keys: an action prefix followed by a scope suffix.
 
 ```vim
-if expand('%:t') =~# '^test_'
-  nmap <buffer> <localleader>rm <Plug>(pytest-run-method)
-  nmap <buffer> <localleader>tm <Plug>(pytest-trace-method)
-  nmap <buffer> <localleader>dm <Plug>(pytest-pdb-method)
-  nmap <buffer> <localleader>ym <Plug>(pytest-yank-method)
-  " ...and the same for class, function and file
-endif
+let g:pytest_mappings = {
+      \ 'run': '<localleader>r',
+      \ 'trace': '<localleader>t',
+      \ 'pdb': '<localleader>d',
+      \ 'yank': '<localleader>y',
+      \ 'scopes': {'method': 'm', 'class': 'c', 'function': 'f', 'file': 't'},
+      \ }
 ```
+
+With `maplocalleader` set to `_`, `_rm` runs the test method around the cursor
+and `_yf` yanks the test function's node id.
+
+| Action | What it does |
+| --- | --- |
+| `run` | Run the test around the cursor |
+| `trace` | Same in a terminal with `--trace` |
+| `pdb` | Same in a terminal with `--pdb` |
+| `yank` | Yank the node id |
+
+- An `'<action>-<scope>'` entry sets that one key instead, e.g.
+  `'yank-file': '<localleader>yF'`. An empty string leaves it unmapped.
+- Leave an action or scope out to skip it.
+
+## `<Plug>` mappings
+
+For your own bindings, each key above is also a `<Plug>` mapping,
+`<Plug>(pytest-{action}-{scope})`, e.g. `<Plug>(pytest-run-method)`. They call
+the buffer-local commands, so they work in Python buffers.
 
 [dispatch-extras](https://github.com/roumail/dispatch-extras) adds `<Plug>`
 mappings to repeat the last `:Dispatch` / `:Start`, open the last log and toggle
@@ -51,6 +68,8 @@ the `:Start` strategy.
 | --- | --- | --- |
 | `g:pytest_command` | `'pytest'` | Running tests (`:RunPytest`, `:RunPytestScope`, `:Dispatch`) |
 | `g:pytest_debug_command` | `g:pytest_command` | `--trace` / `--pdb` sessions in a terminal |
+| `g:pytest_file_patterns` | `['test_*.py', '*_test.py']` | Which files are test files (globs on the file name) |
+| `g:pytest_mappings` | unset | Keys in test files (see [Keys](#keys)) |
 
 For example, to run tests through a wrapper script:
 
