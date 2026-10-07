@@ -61,11 +61,11 @@ let g:pytest_debug_command = 'chkpyt.sh --no-default-addopts'
 
 ## Install
 
-Requires vim-dispatch.
-[dispatch-extras](https://github.com/roumail/dispatch-extras) is optional.
+Requires [vim-dispatch](https://github.com/tpope/vim-dispatch).
+If a required plugin is missing, Vim shows
+`pytest.vim: not loaded, requires …` at startup and the plugin defines nothing.
 
 ```vim
 Plug 'tpope/vim-dispatch'
-Plug 'roumail/dispatch-extras'   " optional
 Plug 'roumail/pytest.vim'
 ```
