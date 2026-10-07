@@ -19,16 +19,31 @@ test, grouped into blocks per file (`:ParsePytestFailures!`: per test class).
 `Tapi_PdbDiff` is a terminal-API hook (`:h terminal-api`) that a pdb `vdiff`
 command can call to show expected | actual in a diff tab.
 
-| Keys (`test_*.py` buffers) | Action |
-| --- | --- |
-| `<localleader>r` + `m` `c` `f` `t` | Run method / class / function / file |
-| `<localleader>t` + `m` `c` `f` `t` | Same with `--trace` |
-| `<localleader>d` + `m` `c` `f` `t` | Same with `--pdb` |
-| `<localleader>y` + `m` `c` `f` `F` | Yank method / class / function / file node id |
-| `<localleader>rd`, `<localleader>rs` | With dispatch-extras: repeat the last `:Dispatch` / `:Start` |
-| `<localleader>dl`, `<localleader>cs` | With dispatch-extras: open the last log / toggle the `:Start` strategy |
+No keys are bound. These `<Plug>` mappings are provided for your vimrc, where
+`{scope}` is `method`, `class`, `function` or `file`:
 
-`let g:pytest_no_mappings = 1` skips them.
+| Mapping | Action |
+| --- | --- |
+| `<Plug>(pytest-run-{scope})` | Run the test around the cursor |
+| `<Plug>(pytest-trace-{scope})` | Same with `--trace` |
+| `<Plug>(pytest-pdb-{scope})` | Same with `--pdb` |
+| `<Plug>(pytest-yank-{scope})` | Yank the node id |
+
+For example, in `~/.vim/ftplugin/python/keymaps.vim`, for test files only:
+
+```vim
+if expand('%:t') =~# '^test_'
+  nmap <buffer> <localleader>rm <Plug>(pytest-run-method)
+  nmap <buffer> <localleader>tm <Plug>(pytest-trace-method)
+  nmap <buffer> <localleader>dm <Plug>(pytest-pdb-method)
+  nmap <buffer> <localleader>ym <Plug>(pytest-yank-method)
+  " ...and the same for class, function and file
+endif
+```
+
+[dispatch-extras](https://github.com/roumail/dispatch-extras) adds `<Plug>`
+mappings to repeat the last `:Dispatch` / `:Start`, open the last log and toggle
+the `:Start` strategy.
 
 ## Options
 
@@ -47,8 +62,7 @@ let g:pytest_debug_command = 'chkpyt.sh --no-default-addopts'
 ## Install
 
 Requires vim-dispatch.
-[dispatch-extras](https://github.com/roumail/dispatch-extras) is optional and adds
-the repeat / log / strategy mappings.
+[dispatch-extras](https://github.com/roumail/dispatch-extras) is optional.
 
 ```vim
 Plug 'tpope/vim-dispatch'
