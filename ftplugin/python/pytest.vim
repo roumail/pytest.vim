@@ -1,25 +1,24 @@
-" Nothing when plugin/pytest.vim didn't load (vim-dispatch missing)
-if !exists('g:loaded_pytest_tools')
+if exists('b:loaded_python_pytest_ftplugin')
   finish
 endif
+
+" Required plugin. ftplugins run after every plugin has loaded, so its
+" g:loaded_* guard tells whether it is installed. Warn once per session.
+if !exists('g:loaded_dispatch')
+  if !get(g:, 'pytest_warned_missing', 0)
+    let g:pytest_warned_missing = 1
+    echohl WarningMsg
+    echomsg 'pytest.vim: requires tpope/vim-dispatch; Python buffers get no pytest commands'
+    echohl None
+  endif
+  finish
+endif
+let b:loaded_python_pytest_ftplugin = 1
 
 " vim dispatch
 compiler pytest
 " https://github.com/tpope/vim-dispatch/issues/315
 let b:dispatch = '-compiler=pytest'
-" Set default dispach strategy for start to be terminal, not tmux
-let g:dispatch_no_tmux_start = 1
-
-if exists('b:loaded_python_pytest_ftplugin')
-  finish
-endif
-let b:loaded_python_pytest_ftplugin = 1
-
-augroup pytest_parse
-  autocmd!
-  " This runs AFTER dispatch completes and populates quickfix
-  autocmd QuickFixCmdPost dispatch call pytest#failures#Parse()
-augroup END
 
 " Copy test paths to clipboard/register without running
 command! -buffer YankTestMethod call pytest#common#YankTestPath('method')

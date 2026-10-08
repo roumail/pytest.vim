@@ -17,7 +17,6 @@ function! pytest#common#NameOfCurrentFunction()
   if (find_object)
     let line = getline('.')
     let match_result = matchlist(line, ' *def \+\(test\w\+\)')
-    echom("match_result: " . string(match_result))
     return match_result[1]
   endif
 endfunction
