@@ -16,8 +16,6 @@ runs pytest too.
 
 `:ParsePytestFailures` (any buffer) reduces pasted pytest output to one line per
 test, grouped into blocks per file (`:ParsePytestFailures!`: per test class).
-`Tapi_PdbDiff` is a terminal-API hook (`:h terminal-api`) that a pdb `vdiff`
-command can call to show expected | actual in a diff tab.
 
 ## Keys
 
