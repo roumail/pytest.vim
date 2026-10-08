@@ -79,8 +79,12 @@ let g:pytest_debug_command = 'chkpyt.sh --no-default-addopts'
 ## Install
 
 Requires [vim-dispatch](https://github.com/tpope/vim-dispatch).
-If a required plugin is missing, Vim shows
-`pytest.vim: not loaded, requires …` at startup and the plugin defines nothing.
+Without it, the first Python buffer shows
+`pytest.vim: requires tpope/vim-dispatch; …` and Python buffers get no pytest
+commands or keys. `:ParsePytestFailures` doesn't need vim-dispatch.
+
+`:TracePytest` and the `trace` / `pdb` actions always run in a Vim terminal
+(`:Start -strategy=terminal`); no global vim-dispatch setting is changed.
 
 ```vim
 Plug 'tpope/vim-dispatch'
