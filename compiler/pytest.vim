@@ -4,8 +4,9 @@ if exists("current_compiler")
 endif
 let current_compiler = "pytest"
 
-" g:pytest_command runs the tests (default: pytest)
-execute 'CompilerSet makeprg=' . escape(get(g:, 'pytest_command', 'pytest') . ' $*', ' \|"')
+" Tests run with project-detect's Python runner (default: pytest)
+let s:command = exists('g:loaded_project_detect') ? project_detect#runner('python').run : 'pytest'
+execute 'CompilerSet makeprg=' . escape(s:command . ' $*', ' \|"')
 " Pytest error format
 " CompilerSet errorformat=
 "     \%E%f:%l:\ %.%#,
