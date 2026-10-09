@@ -7,8 +7,8 @@ function! pytest#dispatch#Dispatch(bang, args) abort
 endfunction
 
 function! pytest#dispatch#StartPytest(args) abort
-  " g:pytest_debug_command runs --trace / --pdb sessions (default: g:pytest_command)
-  let l:cmd = get(g:, 'pytest_debug_command', get(g:, 'pytest_command', 'pytest'))
+  " --trace / --pdb sessions run with the Python runner's debug command
+  let l:cmd = project_detect#runner('python').debug
   execute 'Start! -strategy=terminal ' . l:cmd . ' ' . a:args
 endfunction
 

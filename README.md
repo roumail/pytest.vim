@@ -19,74 +19,59 @@ test, grouped into blocks per file (`:ParsePytestFailures!`: per test class).
 
 ## Keys
 
-Test files are the Python files whose name matches `g:pytest_file_patterns`
-(pytest's own default: `test_*.py` and `*_test.py`); `pytest#is_test_file()`
-tells whether the current buffer is one.
+Test files get buffer-local keys: an action prefix followed by a scope suffix.
 
-Nothing is bound until you set `g:pytest_mappings`. Then every test file gets
-buffer-local keys: an action prefix followed by a scope suffix.
+| Prefix | Action |
+| --- | --- |
+| `<localleader>r` | Run the test around the cursor |
+| `<localleader>t` | Same in a terminal with `--trace` |
+| `<localleader>d` | Same in a terminal with `--pdb` |
+| `<localleader>y` | Yank the node id |
 
-```vim
-let g:pytest_mappings = {
-      \ 'run': '<localleader>r',
-      \ 'trace': '<localleader>t',
-      \ 'pdb': '<localleader>d',
-      \ 'yank': '<localleader>y',
-      \ 'scopes': {'method': 'm', 'class': 'c', 'function': 'f', 'file': 't'},
-      \ }
-```
+| Suffix | Scope |
+| --- | --- |
+| `m` | method |
+| `c` | class |
+| `f` | function |
+| `t` | file |
 
 With `maplocalleader` set to `_`, `_rm` runs the test method around the cursor
 and `_yf` yanks the test function's node id.
 
-| Action | What it does |
-| --- | --- |
-| `run` | Run the test around the cursor |
-| `trace` | Same in a terminal with `--trace` |
-| `pdb` | Same in a terminal with `--pdb` |
-| `yank` | Yank the node id |
-
-- An `'<action>-<scope>'` entry sets that one key instead, e.g.
-  `'yank-file': '<localleader>yF'`. An empty string leaves it unmapped.
-- Leave an action or scope out to skip it.
-
-## `<Plug>` mappings
-
-For your own bindings, each key above is also a `<Plug>` mapping,
-`<Plug>(pytest-{action}-{scope})`, e.g. `<Plug>(pytest-run-method)`. They call
-the buffer-local commands, so they work in Python buffers.
+The test files are those of the project
+[project-detect](https://github.com/roumail/project-detect) finds: files in its
+`tests/` or `test/` directory, and the files pytest collects (`test_*.py`,
+`*_test.py`).
 
 [dispatch-extras](https://github.com/roumail/dispatch-extras) adds `<Plug>`
 mappings to repeat the last `:Dispatch` / `:Start`, open the last log and toggle
 the `:Start` strategy.
 
-## Options
+## Test command
 
-| Variable | Default | Used for |
-| --- | --- | --- |
-| `g:pytest_command` | `'pytest'` | Running tests (`:RunPytest`, `:RunPytestScope`, `:Dispatch`) |
-| `g:pytest_debug_command` | `g:pytest_command` | `--trace` / `--pdb` sessions in a terminal |
-| `g:pytest_file_patterns` | `['test_*.py', '*_test.py']` | Which files are test files (globs on the file name) |
-| `g:pytest_mappings` | unset | Keys in test files (see [Keys](#keys)) |
-
-For example, to run tests through a wrapper script:
+Tests run with project-detect's Python runner: `pytest`, or the command you set
+for Python in `g:project_detect_runners`. `debug` runs the `--trace` / `--pdb`
+sessions and defaults to `run`. For example, to run tests through a wrapper
+script:
 
 ```vim
-let g:pytest_command = 'chkpyt.sh'
-let g:pytest_debug_command = 'chkpyt.sh --no-default-addopts'
+let g:project_detect_runners = {
+      \ 'python': {'run': 'chkpyt.sh', 'debug': 'chkpyt.sh --no-default-addopts'},
+      \ }
 ```
 
 ## Install
 
-Requires [vim-dispatch](https://github.com/tpope/vim-dispatch).
-Without it, the first Python buffer shows
-`pytest.vim: requires tpope/vim-dispatch; …` and Python buffers get no pytest
-commands or keys. `:ParsePytestFailures` doesn't need vim-dispatch.
+Requires [vim-dispatch](https://github.com/tpope/vim-dispatch) and
+[project-detect](https://github.com/roumail/project-detect). Without them, the
+first Python buffer shows `pytest.vim: requires …` and Python buffers get no
+pytest commands or keys. `:ParsePytestFailures` works on its own.
 
 `:TracePytest` and the `trace` / `pdb` actions always run in a Vim terminal
 (`:Start -strategy=terminal`); no global vim-dispatch setting is changed.
 
 ```vim
 Plug 'tpope/vim-dispatch'
+Plug 'roumail/project-detect'
 Plug 'roumail/pytest.vim'
 ```
