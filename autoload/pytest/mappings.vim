@@ -8,7 +8,6 @@ let s:actions = {
       \ }
 let s:scopes = {'m': 'method', 'c': 'class', 'f': 'function', 't': 'file'}
 
-" Buffer-local keys, in the project's test files only
 function! pytest#mappings#apply() abort
   if !project_detect#is_test()
     return

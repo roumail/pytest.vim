@@ -1,7 +1,5 @@
 " -- needs to be added after dispatch, even if we automatically add -compiler pytest
 "https://github.com/tpope/vim-dispatch/issues/263
-" Previously we had to explicitly pass -compiler=pytest -- <args>
-" This is handled via b:dispatch
 function! pytest#dispatch#Dispatch(bang, args) abort
   execute 'Dispatch' . a:bang . ' -compiler=pytest -- ' . a:args
 endfunction
@@ -24,7 +22,6 @@ function! pytest#dispatch#WithScope(scope, bang) abort
 endfunction
 
 
-" Helper function to run pytest with trace in terminal
 function! pytest#dispatch#WithScopeAndTrace(scope, bang) abort
   let test_path = pytest#common#GetTestPath(a:scope)
 

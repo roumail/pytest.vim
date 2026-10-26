@@ -19,7 +19,6 @@ if !empty(s:missing)
 endif
 let b:loaded_python_pytest_ftplugin = 1
 
-" vim dispatch
 compiler pytest
 " https://github.com/tpope/vim-dispatch/issues/315
 let b:dispatch = '-compiler=pytest'
