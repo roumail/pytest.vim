@@ -31,8 +31,6 @@ function! pytest#common#NameOfCurrentMethod()
   endif
 endfunction
 
-" Always goes back to the first instance
-" and returns that if found
 function! pytest#common#FindPythonObject(obj)
   let orig_line   = line('.')
   let orig_col    = col('.')
@@ -53,11 +51,7 @@ function! pytest#common#FindPythonObject(obj)
   let flag = "Wb"
 
   while search(objregexp, flag) > 0
-    "
-    " Very naive, but if the indent is less than or equal to four
-    " keep on going because we assume you are nesting.
-    " Do not count lines that are comments though.
-    "
+    " Skip definitions nested deeper than one level, and commented-out ones
     if (indent(line('.')) <= 4) && !(getline(line('.')) =~ '\v^\s*#(.*)')
       if (indent(line('.')) <= max_indent_allowed)
         return 1
@@ -67,7 +61,6 @@ function! pytest#common#FindPythonObject(obj)
 
 endfunction
 
-" Generate pytest path for current scope
 function! pytest#common#GetTestPath(scope) abort
   let relpath = expand('%')
 
@@ -106,7 +99,6 @@ function! pytest#common#YankTestPath(type) abort
     return
   endif
 
-  " Copy to system clipboard and unnamed register
   let @+ = path
   let @" = path
 

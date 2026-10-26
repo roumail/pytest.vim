@@ -18,7 +18,6 @@ function! pytest#failures#Parse(...) abort
   let l:marker = '^.\{-}\<\%(FAILED\|ERROR\)\s\+\ze\S\+\.py'
   if search(l:marker, 'nw')
     execute 'g!/' . l:marker . '/d'
-    " Remove everything up to and including the FAILED/ERROR prefix
     execute '%s/' . l:marker . '//e'
     " Remove the trailing error message (pytest separates it with ' - ')
     %s/\s-.*$//e
@@ -30,7 +29,6 @@ function! pytest#failures#Parse(...) abort
   " Remove parametrization ids, e.g. test_foo[a-1] -> test_foo
   %s/\[.*\]$//e
 
-  " Sort and remove duplicates
   sort u
 
   call s:GroupPytestBlocks(l:by_class)
