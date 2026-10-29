@@ -14,8 +14,9 @@ runs pytest too.
 | `:TracePytest [args]` | Run in a terminal with `--trace`. |
 | `:YankTestMethod`, `:YankTestClass`, `:YankTestFunction`, `:YankTestFile` | Copy the pytest node id. |
 
-`:ParsePytestFailures` (any buffer) reduces pasted pytest output to one line per
-test, grouped into blocks per file (`:ParsePytestFailures!`: per test class).
+`:ParsePytestFailures` (any buffer) reduces pasted pytest output, in the
+buffer or a range of it, to one line per test, grouped into blocks per file
+(`:ParsePytestFailures!`: per test class).
 
 ## Keys
 
