@@ -63,9 +63,10 @@ let g:project_detect_runners = {
 ## Install
 
 Requires [vim-dispatch](https://github.com/tpope/vim-dispatch) and
-[project-detect](https://github.com/roumail/project-detect). Without them, the
-first Python buffer shows `pytest.vim: requires …` and Python buffers get no
-pytest commands or keys. `:ParsePytestFailures` works on its own.
+[project-detect](https://github.com/roumail/project-detect). With
+[vim-requires](https://github.com/roumail/vim-requires), Vim shows
+`pytest.vim: requires …` at startup when one isn't loaded.
+`:ParsePytestFailures` works on its own.
 
 `:TracePytest` and the `trace` / `pdb` actions always run in a Vim terminal
 (`:Start -strategy=terminal`); no global vim-dispatch setting is changed.
@@ -73,5 +74,6 @@ pytest commands or keys. `:ParsePytestFailures` works on its own.
 ```vim
 Plug 'tpope/vim-dispatch'
 Plug 'roumail/project-detect'
+Plug 'roumail/vim-requires'  " optional: the startup warning
 Plug 'roumail/pytest.vim'
 ```

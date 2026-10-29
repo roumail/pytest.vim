@@ -1,22 +1,6 @@
 if exists('b:loaded_python_pytest_ftplugin')
   finish
 endif
-
-" Required plugins. ftplugins run after every plugin has loaded, so their
-" g:loaded_* guards tell whether they are installed. Warn once per session.
-let s:missing = filter({
-      \ 'tpope/vim-dispatch': 'g:loaded_dispatch',
-      \ 'roumail/project-detect': 'g:loaded_project_detect',
-      \ }, '!exists(v:val)')
-if !empty(s:missing)
-  if !get(g:, 'pytest_warned_missing', 0)
-    let g:pytest_warned_missing = 1
-    echohl WarningMsg
-    echomsg 'pytest.vim: requires ' . join(sort(keys(s:missing)), ', ') . '; Python buffers get no pytest commands'
-    echohl None
-  endif
-  finish
-endif
 let b:loaded_python_pytest_ftplugin = 1
 
 compiler pytest
@@ -37,5 +21,8 @@ command! -buffer -bang -nargs=* -complete=file TracePytest call pytest#dispatch#
 command! -buffer -bang -nargs=1 RunPytestScope call pytest#dispatch#WithScope(<q-args>, "<bang>")
 command! -buffer -nargs=1 -bang RunPytestScopeTrace call pytest#dispatch#WithScopeAndTrace(<q-args>, "<bang>")
 
-" Keys, in the project's test files only
-call pytest#mappings#apply()
+" Keys, in the project's test files only (which project-detect tells, run on
+" every Python buffer)
+if exists('g:loaded_project_detect')
+  call pytest#mappings#apply()
+endif
