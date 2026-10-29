@@ -15,6 +15,7 @@ try
 catch /^Vim\%((\a\+)\)\=:E117:/
 endtry
 
-" Reduce pytest output (or coverage test contexts) in the current buffer to
-" one line per test (! groups by test class, see pytest#failures#Parse)
-command! -bang ParsePytestFailures call pytest#failures#Parse(<bang>0)
+" Reduce pytest output (or coverage test contexts) in the range (default: the
+" buffer) to one line per test (! groups by test class, see
+" pytest#failures#Parse)
+command! -bang -range=% ParsePytestFailures call pytest#failures#Parse(<bang>0, <line1>, <line2>)
