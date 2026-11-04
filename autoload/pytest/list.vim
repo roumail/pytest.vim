@@ -78,14 +78,24 @@ function! pytest#list#in_list() abort
 endfunction
 
 " The node id of the scope around the entry under the cursor, as the same
-" key gives it in the entry's file
+" key gives it in the entry's file: [nodeid, error]. The entry's test is
+" found again where it is now, as a checkout or an edit may have moved it.
 function! pytest#list#nodeid(scope) abort
   let l:items = getwininfo(win_getid())[0].loclist
         \ ? getloclist(0, {'items': 1}).items : getqflist({'items': 1}).items
   let l:item = get(l:items, line('.') - 1, {})
   if empty(l:item) || !l:item.bufnr
-    return ''
+    return ['', 'no entry here']
   endif
   let l:file = bufname(l:item.bufnr)
-  return pytest#scan#nodeid(a:scope, pytest#scan#path(l:file), pytest#scan#lines(l:file), l:item.lnum)
+  let l:path = pytest#scan#path(l:file)
+  let l:lines = pytest#scan#lines(l:file)
+  let l:test = get(l:item, 'user_data', {})
+  let l:now = filter(pytest#scan#tests(l:path, l:lines),
+        \ 'v:val.user_data.nodeid ==# get(l:test, "nodeid", "")')
+  if empty(l:now)
+    return ['', get(l:test, 'nodeid', l:path) . ' is gone: :PytestTests (or :PytestOutline) again']
+  endif
+  let l:nodeid = pytest#scan#nodeid(a:scope, l:path, l:lines, l:now[0].lnum)
+  return [l:nodeid, empty(l:nodeid) ? 'Could not determine test path for scope: ' . a:scope : '']
 endfunction

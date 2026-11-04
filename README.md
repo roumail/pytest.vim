@@ -65,7 +65,10 @@ module-level `test*` functions and the `test*` methods of module-level
 | file | The file |
 
 The lists read a file's buffer when it is loaded, so unsaved edits count.
-Nothing is stored.
+Nothing is stored. A list is what the files were when it was made: after a
+checkout or edits, the keys still find an entry's test where it is now, and
+say so when it is gone, but `<CR>` jumps to where it was. Run the command
+again to refresh it.
 
 The test files, here and in `:PytestTests`, are those of the project
 [project-detect](https://github.com/roumail/project-detect) finds: files in its
