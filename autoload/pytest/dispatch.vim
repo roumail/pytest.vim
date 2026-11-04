@@ -11,25 +11,10 @@ function! pytest#dispatch#StartPytest(args) abort
 endfunction
 
 function! pytest#dispatch#WithScope(scope, bang) abort
-  let test_path = pytest#common#GetTestPath(a:scope)
-
-  if empty(test_path)
-    echo "Could not determine test path for scope: " . a:scope
-    return
-  endif
-
-  call pytest#dispatch#Dispatch(a:bang, test_path)
+  call pytest#act('run', a:scope, a:bang)
 endfunction
 
-
+" --trace, or --pdb with bang
 function! pytest#dispatch#WithScopeAndTrace(scope, bang) abort
-  let test_path = pytest#common#GetTestPath(a:scope)
-
-  if empty(test_path)
-    echo "Could not determine test path for scope: " . a:scope
-    return
-  endif
-
-  let debug_flag = empty(a:bang) ? '--trace' : '--pdb'
-  call pytest#dispatch#StartPytest(test_path . ' ' . debug_flag)
+  call pytest#act(empty(a:bang) ? 'trace' : 'debug', a:scope)
 endfunction
