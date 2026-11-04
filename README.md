@@ -14,6 +14,11 @@ runs pytest too.
 | `:TracePytest [args]` | Run in a terminal with `--trace`. |
 | `:YankTestMethod`, `:YankTestClass`, `:YankTestFunction`, `:YankTestFile` | Copy the pytest node id. |
 
+| Command (anywhere) | What it does |
+| --- | --- |
+| `:PytestTests` | The project's tests in the quickfix list, titled `Tests`, one entry per test. Run it again to refresh: it replaces its list, so `:colder` history isn't used up. |
+| `:PytestOutline` | The current file's tests in the window's location list: its outline. |
+
 `:ParsePytestFailures` (any buffer) reduces pasted pytest output, in the
 buffer or a range of it, to one line per test, grouped into blocks per file
 (`:ParsePytestFailures!`: per test class).
@@ -39,7 +44,30 @@ Test files get buffer-local keys: an action prefix followed by a scope suffix.
 With `maplocalleader` set to `_`, `_rm` runs the test method around the cursor
 and `_yf` yanks the test function's node id.
 
-The test files are those of the project
+The same keys work in the window of a test list (`:PytestTests`,
+`:PytestOutline`), on the entry under the cursor, doing what they do in its
+file with the cursor on its line: `_rm` runs that test (`_rf` when it is a
+function), `_rc` its class, `_rt` its file. In other list windows they do
+nothing of pytest.vim's. `<CR>`, and
+[qf-tools](https://github.com/roumail/qf-tools)' `dd` and `u`, work as in any
+list. Set `maplocalleader` in your vimrc, not in an ftplugin, so the list
+windows get it too.
+
+A test is what pytest collects by default, found without running pytest:
+module-level `test*` functions and the `test*` methods of module-level
+`Test*` classes. A parametrised test is one entry. The scopes around a line:
+
+| Scope | Is |
+| --- | --- |
+| function | The module-level `test*` function the line is in |
+| class | The module-level class the line is in |
+| method | The method of that class the line is in (a function nested in it is part of it) |
+| file | The file |
+
+The lists read a file's buffer when it is loaded, so unsaved edits count.
+Nothing is stored.
+
+The test files, here and in `:PytestTests`, are those of the project
 [project-detect](https://github.com/roumail/project-detect) finds: files in its
 `tests/` or `test/` directory, and the files pytest collects (`test_*.py`,
 `*_test.py`).
@@ -78,3 +106,11 @@ Plug 'roumail/project-detect'
 Plug 'roumail/vim-requires'  " optional: the startup warning
 Plug 'roumail/pytest.vim'
 ```
+
+## Tests
+
+```sh
+vim -Nu NONE -i NONE -Es -S test/run.vim
+```
+
+project-detect comes from `$PROJECT_DETECT`, else vim-plug's copy.
