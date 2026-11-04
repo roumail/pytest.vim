@@ -179,6 +179,29 @@ function! s:test_list_keys() abort
   call assert_equal(['Dispatch -compiler=pytest -- tests/test_sample.py::TestThing::test_a'], s:ran)
 endfunction
 
+function! s:test_list_entry_moved_or_gone() abort
+  edit tests/test_other.py
+  PytestTests
+  let l:i = index(map(getqflist(), 'v:val.user_data.nodeid'), 'tests/test_other.py::test_other')
+  " As a checkout leaves it: lines added above the test
+  call win_gotoid(bufwinid('tests/test_other.py'))
+  call append(0, ['def test_added():', '    pass', '', ''])
+  copen
+  call cursor(l:i + 1, 1)
+  normal _yf
+  call assert_equal('tests/test_other.py::test_other', @")
+  " And gone
+  call win_gotoid(bufwinid('tests/test_other.py'))
+  silent %delete _
+  copen
+  call cursor(l:i + 1, 1)
+  let @" = ''
+  normal _yf
+  call assert_equal('', @")
+  call win_gotoid(bufwinid('tests/test_other.py'))
+  edit!
+endfunction
+
 function! s:test_keys_only_in_test_lists() abort
   call setqflist([], ' ', {'title': 'grep', 'items': [{'filename': 'tests/test_sample.py', 'lnum': 14, 'text': 'x'}]})
   copen

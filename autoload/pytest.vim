@@ -5,9 +5,10 @@
 " around the cursor, or, in a test list's window, around the entry under
 " the cursor. bang: :Dispatch! for 'run'.
 function! pytest#act(action, scope, ...) abort
-  let l:nodeid = pytest#list#in_list() ? pytest#list#nodeid(a:scope) : pytest#nodeid(a:scope)
+  let [l:nodeid, l:error] = pytest#list#in_list() ? pytest#list#nodeid(a:scope)
+        \ : [pytest#nodeid(a:scope), 'Could not determine test path for scope: ' . a:scope]
   if empty(l:nodeid)
-    echo 'Could not determine test path for scope: ' . a:scope
+    echo l:error
     return
   endif
   call pytest#run(a:action, l:nodeid, get(a:, 1, ''))
