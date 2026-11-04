@@ -6,15 +6,6 @@ if exists('g:loaded_pytest_tools')
 endif
 let g:loaded_pytest_tools = 1
 
-" Warns at startup when a required plugin isn't loaded (roumail/vim-requires)
-try
-  call roumail_requires#check('pytest.vim', {
-        \ 'tpope/vim-dispatch': 'g:loaded_dispatch',
-        \ 'roumail/project-detect': 'g:loaded_project_detect',
-        \ })
-catch /^Vim\%((\a\+)\)\=:E117:/
-endtry
-
 " Reduce pytest output (or coverage test contexts) in the range (default: the
 " buffer) to one line per test (! groups by test class, see
 " pytest#failures#Parse)
