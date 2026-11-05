@@ -10,13 +10,13 @@ runs pytest too.
 | --- | --- |
 | `:RunPytest[!] [args]` | `:Dispatch` pytest with the given arguments. |
 | `:RunPytestScope[!] {method\|class\|function\|file}` | Run the test around the cursor. |
-| `:RunPytestScopeTrace[!] {scope}` | Same, in a terminal with `--trace` (`!`: `--pdb`). |
-| `:TracePytest [args]` | Run in a terminal with `--trace`. |
+| `:RunPytestScopeTrace[!] {scope}` | Same, in a terminal with `--trace` (`!`: `--pdb`). With project-detect. |
+| `:TracePytest [args]` | Run in a terminal with `--trace`. With project-detect. |
 | `:YankTestMethod`, `:YankTestClass`, `:YankTestFunction`, `:YankTestFile` | Copy the pytest node id. |
 
 | Command (anywhere) | What it does |
 | --- | --- |
-| `:PytestTests` | The project's tests in the quickfix list, titled `Tests`, one entry per test. Run it again to refresh: it replaces its list, so `:colder` history isn't used up. |
+| `:PytestTests` | The project's tests in the quickfix list, titled `Tests`, one entry per test. Run it again to refresh: it replaces its list, so `:colder` history isn't used up. With project-detect. |
 | `:PytestOutline` | The current file's tests in the window's location list: its outline. |
 
 `:ParsePytestFailures` (any buffer) reduces pasted pytest output, in the
@@ -25,7 +25,8 @@ buffer or a range of it, to one line per test, grouped into blocks per file
 
 ## Keys
 
-Test files get buffer-local keys: an action prefix followed by a scope suffix.
+With project-detect, test files get buffer-local keys: an action prefix
+followed by a scope suffix.
 
 | Prefix | Action |
 | --- | --- |
@@ -81,29 +82,48 @@ the `:Start` strategy.
 
 ## Test command
 
-Tests run with project-detect's Python runner: `pytest`, or the command you set
-for Python in `g:project_detect_runners`. `debug` runs the `--trace` / `--pdb`
-sessions and defaults to `run`. For example, to run tests through a wrapper
-script:
+`:RunPytest`, `:RunPytestScope` and the `r` keys run `:Dispatch` with Vim's
+`pytest` compiler. The `--trace` / `--pdb` sessions run project-detect's
+Python `debug` command, which defaults to its `run` command, `pytest`. For
+example, to debug through a wrapper script:
 
 ```vim
 let g:project_detect_runners = {
-      \ 'python': {'run': 'chkpyt.sh', 'debug': 'chkpyt.sh --no-default-addopts'},
+      \ 'python': {'debug': 'chkpyt.sh --no-default-addopts'},
       \ }
 ```
 
 ## Install
 
-Requires [vim-dispatch](https://github.com/tpope/vim-dispatch) and
-[project-detect](https://github.com/roumail/project-detect).
-`:ParsePytestFailures` works on its own.
+The core is pytest.vim and
+[vim-dispatch](https://github.com/tpope/vim-dispatch), which runs the tests:
 
-`:TracePytest` and the `trace` / `pdb` actions always run in a Vim terminal
+```vim
+Plug 'tpope/vim-dispatch'
+Plug 'roumail/pytest.vim'
+```
+
+That gives Python buffers `:RunPytest`, `:RunPytestScope`, the `:YankTest*`
+commands and `b:dispatch`, and every buffer `:PytestOutline` and
+`:ParsePytestFailures`, with the keys in `:PytestOutline`'s list.
+
+Each row below adds a module on top of the core, and **Needs** is the whole
+set of plugins it takes besides the core:
+
+| Needs | Module | Adds |
+| --- | --- | --- |
+| [project-detect](https://github.com/roumail/project-detect) | The project | The keys in its test files; `:PytestTests`, its tests; the `--trace` / `--pdb` sessions, `:TracePytest`, `:RunPytestScopeTrace` and the `t` / `d` keys, with its `debug` command |
+| [qf-tools](https://github.com/roumail/qf-tools) | Pruning lists | `dd` and `u` in `:PytestTests` and `:PytestOutline`, to keep the tests you're working on; `:QfSave` and `:QfLoad` to keep a pruned `:PytestTests` list across rebuilds, by name with vim-place |
+
+The `--trace` / `--pdb` sessions always run in a Vim terminal
 (`:Start -strategy=terminal`); no global vim-dispatch setting is changed.
+
+All of it:
 
 ```vim
 Plug 'tpope/vim-dispatch'
 Plug 'roumail/project-detect'
+Plug 'roumail/qf-tools'
 Plug 'roumail/pytest.vim'
 ```
 

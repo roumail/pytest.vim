@@ -7,6 +7,9 @@ let s:title = 'Tests'
 " :PytestTests: the tests of the project's test files (project-detect's),
 " in the quickfix list, replacing an earlier one
 function! pytest#list#tests() abort
+  if !pytest#requires(':PytestTests', 'project-detect', 'project_detect')
+    return
+  endif
   let l:root = project_detect#root()
   if empty(l:root)
     echo 'PytestTests: no project here (project-detect)'
