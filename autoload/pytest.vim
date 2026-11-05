@@ -1,3 +1,15 @@
+" Whether the plugin with the autoload file autoload/{name}.vim is installed,
+" saying what needs it when it isn't: the commands that use one check first
+function! pytest#requires(what, plugin, name) abort
+  if !empty(globpath(&runtimepath, 'autoload/' . a:name . '.vim', 1))
+    return 1
+  endif
+  echohl ErrorMsg
+  echomsg 'pytest.vim: ' . a:what . ' needs ' . a:plugin . ', which is not installed'
+  echohl None
+  return 0
+endfunction
+
 " One way to act on a test, from the cursor in a test file or from an entry
 " of a test list: the scope gives a node id, the action is done on it.
 
