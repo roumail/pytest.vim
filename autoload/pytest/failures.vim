@@ -54,9 +54,7 @@ function! s:GroupPytestBlocks(lines, by_class) abort
       continue
     endif
     let l:parts = split(l:line, '::')
-    if empty(l:parts)
-      let l:key = l:line
-    elseif a:by_class && len(l:parts) > 1
+    if a:by_class && len(l:parts) > 1
       " everything but the test name: file or file::Class[::Nested]
       let l:key = join(l:parts[0 : -2], '::')
     else

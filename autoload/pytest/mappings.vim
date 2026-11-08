@@ -1,7 +1,7 @@
 " Keys: an action prefix followed by a scope suffix, e.g. <localleader>rm
 " runs the test method around the cursor. The same keys in a test file and
 " in a test list's window.
-let s:actions = {'r': 'run', 't': 'trace', 'd': 'debug', 'y': 'yank'}
+let s:actions = {'r': 'run', 't': 'trace'}
 let s:scopes = {'m': 'method', 'c': 'class', 'f': 'function', 't': 'file'}
 
 " In the project's test files
