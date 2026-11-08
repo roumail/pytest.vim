@@ -1,11 +1,6 @@
-" pytest: run, debug and yank pytest targets from Python buffers.
-" Requires tpope/vim-dispatch; roumail/project-detect adds the keys in test
-" files, :PytestTests and the --trace / --pdb sessions (README: Install).
-if exists('g:loaded_pytest_tools')
-  finish
-endif
-let g:loaded_pytest_tools = 1
-
+" pytest: run and --trace pytest targets from Python buffers.
+" Requires tpope/vim-dispatch; project-detect adds the keys in test files,
+" :PytestTests and the --trace sessions (README: Install).
 " Reduce pytest output (or coverage test contexts) in the range (default: the
 " buffer) to one line per test (! groups by test class, see
 " pytest#failures#Parse)

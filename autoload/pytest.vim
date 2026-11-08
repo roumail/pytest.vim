@@ -1,3 +1,9 @@
+" Whether project-detect is installed (its autoload file), so its project
+" describes test files and how tests run
+function! pytest#has_project_detect() abort
+  return !empty(globpath(&runtimepath, 'autoload/project_detect.vim', 1))
+endfunction
+
 " Whether the plugin with the autoload file autoload/{name}.vim is installed,
 " saying what needs it when it isn't: the commands that use one check first
 function! pytest#requires(what, plugin, name) abort
@@ -31,17 +37,12 @@ function! pytest#nodeid(scope) abort
   return pytest#scan#nodeid(a:scope, pytest#scan#path(expand('%')), getline(1, '$'), line('.'))
 endfunction
 
-" action: 'run' (:Dispatch, bang: :Dispatch!), 'trace' (--trace in a
-" terminal), 'debug' (--pdb in a terminal) or 'yank' (the node id to the
-" clipboard and the unnamed register)
+" action: 'run' (:Dispatch, bang: :Dispatch!) or 'trace' (--trace in a
+" terminal)
 function! pytest#run(action, nodeid, ...) abort
   if a:action ==# 'run'
     call pytest#dispatch#Dispatch(get(a:, 1, ''), a:nodeid)
-  elseif a:action ==# 'trace' || a:action ==# 'debug'
-    call pytest#dispatch#StartPytest(a:nodeid . (a:action ==# 'trace' ? ' --trace' : ' --pdb'))
-  elseif a:action ==# 'yank'
-    let @+ = a:nodeid
-    let @" = a:nodeid
-    echo 'Copied: ' . a:nodeid
+  else
+    call pytest#dispatch#StartPytest(a:nodeid . ' --trace')
   endif
 endfunction
