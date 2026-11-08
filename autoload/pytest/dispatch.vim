@@ -8,7 +8,11 @@ function! pytest#dispatch#StartPytest(args) abort
   if !pytest#requires('A --trace session', 'project-detect', 'project_detect')
     return
   endif
-  " --trace sessions run with the Python runner's debug command
-  let l:cmd = project_detect#runner('python').debug
-  execute 'Start! -strategy=terminal ' . l:cmd . ' ' . a:args
+  let l:handlers = g:dispatch_handlers
+  let g:dispatch_handlers = ['terminal']
+  try
+    execute 'Start! ' . project_detect#runner('python').debug . ' ' . a:args
+  finally
+    let g:dispatch_handlers = l:handlers
+  endtry
 endfunction
