@@ -5,7 +5,7 @@ function! pytest#dispatch#Dispatch(bang, args) abort
 endfunction
 
 function! pytest#dispatch#StartPytest(args) abort
-  if !pytest#requires('A --trace session', 'project-detect', 'project_detect')
+  if !pytest#requires('A --trace / --pdb session','project-detect', 'project_detect')
     return
   endif
   let l:handlers = g:dispatch_handlers

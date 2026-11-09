@@ -37,12 +37,12 @@ function! pytest#nodeid(scope) abort
   return pytest#scan#nodeid(a:scope, pytest#scan#path(expand('%')), getline(1, '$'), line('.'))
 endfunction
 
-" action: 'run' (:Dispatch, bang: :Dispatch!) or 'trace' (--trace in a
-" terminal)
+" action: 'run' (:Dispatch, bang: :Dispatch!), 'trace' (--trace in a
+" terminal) or 'debug' (--pdb in a terminal)
 function! pytest#run(action, nodeid, ...) abort
   if a:action ==# 'run'
     call pytest#dispatch#Dispatch(get(a:, 1, ''), a:nodeid)
   else
-    call pytest#dispatch#StartPytest(a:nodeid . ' --trace')
+    call pytest#dispatch#StartPytest(a:nodeid . (a:action ==# 'trace' ? ' --trace' : ' --pdb'))
   endif
 endfunction
