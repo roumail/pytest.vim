@@ -1,5 +1,10 @@
+" What tests run with, in a --trace or --pdb session too
+function! pytest#command() abort
+  return get(g:, 'pytest_command', 'pytest')
+endfunction
+
 " Whether project-detect is installed (its autoload file), so its project
-" describes test files and how tests run
+" describes test files
 function! pytest#has_project_detect() abort
   return !empty(globpath(&runtimepath, 'autoload/project_detect.vim', 1))
 endfunction
