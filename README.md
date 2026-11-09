@@ -48,11 +48,7 @@ Tests run with `pytest`. To add options or use another command:
 
 ```vim
 let g:pytest_command = 'pytest -q --tb=line'
-let g:pytest_debug_command = 'pytest'
 ```
-
-`g:pytest_debug_command` is for the `--trace` and `--pdb` sessions, and defaults
-to `g:pytest_command`.
 
 ## Tests
 

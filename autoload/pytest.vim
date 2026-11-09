@@ -1,11 +1,6 @@
-" What tests run with
+" What tests run with, in a --trace or --pdb session too
 function! pytest#command() abort
   return get(g:, 'pytest_command', 'pytest')
-endfunction
-
-" What --trace and --pdb sessions run with
-function! pytest#debug_command() abort
-  return get(g:, 'pytest_debug_command', pytest#command())
 endfunction
 
 " Whether project-detect is installed (its autoload file), so its project
