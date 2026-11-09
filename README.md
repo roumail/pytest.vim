@@ -18,7 +18,7 @@ Optional, each for what it adds:
 
 | Also needs | Adds |
 | --- | --- |
-| [project-detect](https://github.com/vimoured/project-detect) | The keys in test files, `:PytestTests`, and the `--trace` and `--pdb` sessions |
+| [project-detect](https://github.com/vimoured/project-detect) | The keys in test files and `:PytestTests` |
 | [qf-tools](https://github.com/vimoured/qf-tools) | `dd` and `u` in the test lists, and saving a pruned list |
 
 ## Use
@@ -44,13 +44,15 @@ action followed by a scope.
 With `maplocalleader` set to `_`, `_rm` runs the test method around the cursor.
 Set `maplocalleader` in your vimrc, so the list windows get it too.
 
-To run tests or debug through your own command, set project-detect's runners:
+Tests run with `pytest`. To add options or use another command:
 
 ```vim
-let g:project_detect_runners = {
-      \ 'python': {'debug': 'chkpyt.sh --no-default-addopts'},
-      \ }
+let g:pytest_command = 'pytest -q --tb=line'
+let g:pytest_debug_command = 'pytest'
 ```
+
+`g:pytest_debug_command` is for the `--trace` and `--pdb` sessions, and defaults
+to `g:pytest_command`.
 
 ## Tests
 
