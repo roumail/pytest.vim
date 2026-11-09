@@ -18,7 +18,7 @@ Optional, each for what it adds:
 
 | Also needs | Adds |
 | --- | --- |
-| [project-detect](https://github.com/vimoured/project-detect) | The keys in test files, `:PytestTests`, and the `--trace` sessions |
+| [project-detect](https://github.com/vimoured/project-detect) | The keys in test files, `:PytestTests`, and the `--trace` and `--pdb` sessions |
 | [qf-tools](https://github.com/vimoured/qf-tools) | `dd` and `u` in the test lists, and saving a pruned list |
 
 ## Use
@@ -38,7 +38,7 @@ action followed by a scope.
 | --- | --- | --- | --- | --- |
 | `<localleader>r` | Run with `:Dispatch` | | `m` | method |
 | `<localleader>t` | Run with `--trace` | | `c` | class |
-| | | | `f` | function |
+| `<localleader>d` | Run with `--pdb` | | `f` | function |
 | | | | `t` | file |
 
 With `maplocalleader` set to `_`, `_rm` runs the test method around the cursor.
